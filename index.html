@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#1a1a1a;color:#fff;padding:20px}
+.container{max-width:1100px;margin:0 auto}
+header{text-align:center;margin-bottom:30px}
+h1{margin-bottom:20px;color:#00ffaa}
+.nav{display:flex;justify-content;center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.nav-btn{padding:9px 16px;background:#2a2a2a;color:#fff;border:none;border-radius:30px;cursor:pointer}
+.nav-btn.active{background:#00ffaa;color:#000}
+.search{text-align:center;margin-bottom:30px}
+#search{width:320px;padding:10px 15px;border-radius:30px;border:none;background:#2a2a2a;color:#fff;outline:none}
+.games{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{background:#252525;border-radius:12px;overflow:hidden;cursor:pointer}
+.card img{width:100%;height:130px;object-fit:cover}
+.info{padding:12px}
+.title{font-size:16px;margin-bottom:6px}
+.cate{font-size:12px;color:#aaa}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);align-items:center;justify-content:center}
+.modal-inner{width:90%;max-width:800px;background:#000;position:relative}
+.close{position:absolute;right:15px;top:10px;font-size:26px;color:#fff;cursor:pointer}
+iframe{width:100%;height:460px;border:none}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>Game Platform</h1>
+<div class="nav">
+<button class="nav-btn active" data-cate="all">All</button>
+<button class="nav-btn" data-cate="action">Action</button>
+<button class="nav-btn" data-cate="puzzle">Puzzle</button>
+<button class="nav-btn" data-cate="arcade">Arcade</button>
+<button class="nav-btn" data-cate="casual">Casual</button>
+</div>
+<div class="search">
+<input type="text" id="search" placeholder="Search games...">
+</div>
+</header>
+<div class="games" id="games"></div>
+</div>
+<div class="modal" id="modal">
+<div class="modal-inner">
+<span class="close" id="close">×</span>
+<iframe id="gameFrame"></iframe>
+</div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
