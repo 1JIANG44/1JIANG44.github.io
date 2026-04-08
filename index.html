@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamePortal - Play Free Games Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4ade80;
+            margin-bottom: 10px;
+        }
+
+        .header-desc {
+            font-size: 1.1rem;
+            color: #a3a3a3;
+        }
+
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn.active {
+            background-color: #4ade80;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .category-btn:hover {
+            background-color: #3d3d3d;
+        }
+
+        .search-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background-color: #2d2d2d;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        #search-input::placeholder {
+            color: #888888;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background-color: #2d2d2d;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .game-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            color: #4ade80;
+        }
+
+        .game-category {
+            display: inline-block;
+            padding: 4px 10px;
+            background-color: #4ade8033;
+            color: #4ade80;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+
+        .game-desc {
+            font-size: 0.9rem;
+            color: #a3a3a3;
+        }
+
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 900px;
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #ffffff;
+            cursor: pointer;
+            z-index: 1001;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #ef4444;
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .modal-game-title {
+            padding: 15px;
+            font-size: 1.5rem;
+            color: #4ade80;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .games-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+
+            .game-iframe {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .game-iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 GamePortal</h1>
+            <p class="header-desc">Play free online games - no download, no ads</p>
+        </header>
+
+        <div class="category-nav">
+            <button class="category-btn active" data-category="all">All Games</button>
+            <button class="category-btn" data-category="action">Action</button>
+            <button class="category-btn" data-category="puzzle">Puzzle</button>
+            <button class="category-btn" data-category="arcade">Arcade</button>
+            <button class="category-btn" data-category="casual">Casual</button>
+            <button class="category-btn" data-category="racing">Racing</button>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search games by name or category...">
+        </div>
+
+        <div class="games-grid" id="games-grid"></div>
+    </div>
+
+    <div class="game-modal" id="game-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 class="modal-game-title" id="modal-game-title"></h2>
+            <iframe class="game-iframe" id="game-iframe" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        const gamesLibrary = [
+            {
+                id: 1,
+                title: "Slither.io",
+                category: "action",
+                image: "https://images.unsplash.com/photo-1628146345166-7a67f91e0e5f?w=400&h=250&fit=crop",
+                description: "Control a snake and eat orbs to grow - avoid other players!",
+                iframeUrl: "https://slither.io/"
+            },
+            {
+                id: 2,
+                title: "2048",
+                category: "puzzle",
+                image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&h=250&fit=crop",
+                description: "Classic 2048 puzzle game - merge tiles to reach 2048!",
+                iframeUrl: "https://play2048.co/"
+            },
+            {
+                id: 3,
+                title: "Pac-Man",
+                category: "arcade",
+                image: "https://images.unsplash.com/photo-1616555535223-70409b011f00?w=400&h=250&fit=crop",
+                description: "Classic Pac-Man arcade game - eat dots and avoid ghosts!",
+                iframeUrl: "https://pacman.classicgaming.cc/"
+            },
+            {
+                id: 4,
+                title: "Flappy Bird",
+                category: "casual",
+                image: "https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=400&h=250&fit=crop",
+                description: "Simple but addictive - tap to fly and avoid pipes!",
+                iframeUrl: "https://flappybird.io/"
+            },
+            {
+                id: 5,
+                title: "Moto X3M",
+                category: "racing",
+                image: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=400&h=250&fit=crop",
+                description: "Epic motorcycle racing game with crazy stunts!",
+                iframeUrl: "https://www.miniclip.com/games/moto-x3m/en/"
+            },
+            {
+                id: 6,
+                title: "Tetris",
+                category: "puzzle",
+                image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=250&fit=crop",
+                description: "Classic Tetris - stack blocks and clear lines!",
+                iframeUrl: "https://tetris.com/play-tetris"
+            },
+            {
+                id: 7,
+                title: "Agar.io",
+                category: "action",
+                image: "https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?w=400&h=250&fit=crop",
+                description: "Eat smaller cells to grow - don't get eaten!",
+                iframeUrl: "https://agar.io/"
+            },
+            {
+                id: 8,
+                title: "Snake Game",
+                category: "arcade",
+                image: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=250&fit=crop",
+                description: "Classic snake game - eat food and grow longer!",
+                iframeUrl: "https://snake.game/"
+            }
+        ];
+
+        const gamesGrid = document.getElementById('games-grid');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        const searchInput = document.getElementById('search-input');
+        const gameModal = document.getElementById('game-modal');
+        const closeModal = document.getElementById('close-modal');
+        const gameIframe = document.getElementById('game-iframe');
+        const modalGameTitle = document.getElementById('modal-game-title');
+
+        function renderGames(gamesToRender) {
+            gamesGrid.innerHTML = '';
+            
+            if (gamesToRender.length === 0) {
+                gamesGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #888;">No games found 😞</div>';
+                return;
+            }
+
+            gamesToRender.forEach(game => {
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}" class="game-img">
+                    <div class="game-info">
+                        <h3 class="game-title">${game.title}</h3>
+                        <span class="game-category">${game.category}</span>
+                        <p class="game-desc">${game.description}</p>
+                    </div>
+                `;
+
+                gameCard.addEventListener('click', () => {
+                    modalGameTitle.textContent = game.title;
+                    gameIframe.src = game.iframeUrl;
+                    gameModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                });
+
+                gamesGrid.appendChild(gameCard);
+            });
+        }
+
+        renderGames(gamesLibrary);
+
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const selectedCategory = btn.dataset.category;
+                let filteredGames = gamesLibrary;
+                
+                if (selectedCategory !== 'all') {
+                    filteredGames = gamesLibrary.filter(game => game.category === selectedCategory);
+                }
+
+                renderGames(filteredGames);
+            });
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+                let filteredGames = gamesLibrary;
+                
+                if (activeCategory !== 'all') {
+                    filteredGames = gamesLibrary.filter(game => game.category === activeCategory);
+                }
+                renderGames(filteredGames);
+                return;
+            }
+
+            const filteredGames = gamesLibrary.filter(game => 
+                game.title.toLowerCase().includes(searchTerm) || 
+                game.category.toLowerCase().includes(searchTerm)
+            );
+
+            renderGames(filteredGames);
+        });
+
+        closeModal.addEventListener('click', () => {
+            gameModal.style.display = 'none';
+            gameIframe.src = '';
+            document.body.style.overflow = 'auto';
+        });
+
+        gameModal.addEventListener('click', (e) => {
+            if (e.target === gameModal) {
+                closeModal.click();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && gameModal.style.display === 'flex') {
+                closeModal.click();
+            }
+        });
+    </script>
+</body>
+</html>
